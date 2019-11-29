@@ -62,38 +62,13 @@ def showcard(card):
         lineforprint = (' '.join(map(str, i.ravel())))
         print(lineforprint.replace('n', ' '))
 
-#Создаем объект карту
-card_max = create_card()
-#Печатает карту
-showcard(card_max)
-#print(type(card_max))
-
-#Объявляем мешок как константу, всегда 90 шт.
-BOCHONKI = [i for i in range(1, 91)]
-#print(BOCHONKI)
-
-#Вытаскиваем случаный бочонок
-current_bochonok = str(BOCHONKI.pop(random.randrange(len(BOCHONKI))))
-print('Текущий номер бочонка', current_bochonok)
-#print(BOCHONKI)
-
-
-#a = '35'
-# if a in card_max:
-#     #print(np.unique(card_max == a, return_index=True))
-#     print(np.where(card_max == a))
-#     indexnum = np.where(card_max == a)
-#     card_max[indexnum] = '-'+a+'-'
-# print('Карта после вычеркивания')
-# showcard(card_max)
-
 
 def bochonoknum_is_in_card(card, current_bochonok):
     '''
     Проверяет есть ли номер бочонка в карте
     :param card: карта игрока (массив)
     :param bochonok: номер бочонка пробразованный в строку
-    :return: True если есть
+    :return: индекс позиции номера бочонка в карте
     '''
     # print(np.unique(card_max == a, return_index=True))
         #print(np.where(card_max == a))
@@ -102,15 +77,38 @@ def bochonoknum_is_in_card(card, current_bochonok):
         return indexnum
 
 def cover_bochonoknum(card, current_bochonok):
+    '''
+    Вычеркивает номер бочонка изкарты, если номер есть в карте.
+    Наличия номера бокочнка проверяется функцией "bochonoknum_is_in_card"
+    :param card: карта игрока
+    :param current_bochonok: номер вытянутого из мешка бочонка
+    :return: Карту с вычернкутым номером
+    '''
     if current_bochonok in card:
         indexnum = bochonoknum_is_in_card(card, current_bochonok)
         card[indexnum] = '-'+current_bochonok+'-'
     return card
 
+
+#ПРОЦЕДУРА ИГРЫ
+#Объявляем мешок как константу, всегда 90 шт.
+BOCHONKI = [i for i in range(1, 91)]
+#print(BOCHONKI)
+
+#Создаем объект карту
+card_max = create_card()
+#Печатает карту для ознакомления
+showcard(card_max)
+#print(type(card_max))
+
+#Вытаскиваем случаный бочонок
+current_bochonok = str(BOCHONKI.pop(random.randrange(len(BOCHONKI))))
+print('Текущий номер бочонка', current_bochonok)
+#print(BOCHONKI)
+
 #проверяем цифру в карте
 if bochonoknum_is_in_card(card_max, current_bochonok):
     print('есть в карте')
-
 
 #зачеркиваем цифру
 card_max = cover_bochonoknum(card_max, current_bochonok)
@@ -118,5 +116,9 @@ showcard(card_max)
 
 #после каждого хода проверяем победителя
 #если в массиве количество n = 27
+
+
+
 #игра окончена, объявляем победителя
+
 
