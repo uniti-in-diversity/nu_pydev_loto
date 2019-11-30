@@ -2,14 +2,6 @@ import numpy as np
 import random
 from collections import Counter
 
-def add_separators(f):
-    def inner(*args, **kwargs):
-        print ('=' * 25)
-        result = f(*args, **kwargs)
-        print('=' * 25)
-        return result
-    return inner
-
 def check_unic_nums(array):
     '''
     Так как np.random.randint генерирует ОДНО случайное число,
@@ -32,13 +24,16 @@ def check_unic_nums(array):
 
 class Player:
 
-    def __init__(self, name, type):
-        self.computer = type
+    def __init__(self, name, player_type = False):
+        self.is_human = player_type
         self.winer = False
         self.name = name
+        self.card = Card(name)
 
 class Card():
-    def __init__(self):
+
+    def __init__(self, username):
+        self.username = username
         '''
         Генерация рандом массива 3 на 5 с заполнением случаными чилами от 1 до 90
         Генерация нулевого массива 3 на 4
@@ -62,21 +57,19 @@ class Card():
         array = array[rows, cols]
         self.array = array
 
-
-    @add_separators
     def showcard(self):
         '''
         Печатает массив в виде игровой карточки лото, нули заменяются пустыми строками (одиночными пробелами)
         :param card: массив элементов
         :return: Print в консоль
         '''
+        print('='*27)
+        print(self.username)
+        print('='*27)
         for i in self.array:
             lineforprint = (' '.join(map(str, i.ravel())))
             print(lineforprint.replace('n', ' '))
-
-# def __iter__(self):
-#     return iter((self.__dict__.values()))
-#     #return iter(self.__dict__.items())
+        print('='*27)
 
     def bochonoknum_is_in_card(self, current_bochonok):
         '''
@@ -85,8 +78,6 @@ class Card():
         :param bochonok: номер бочонка пробразованный в строку
         :return: индекс позиции номера бочонка в карте
         '''
-        # print(np.unique(card_max == a, return_index=True))
-            #print(np.where(card_max == a))
         if current_bochonok in self.array:
             indexnum = np.where(self.array == current_bochonok)
             return indexnum
@@ -100,9 +91,7 @@ class Card():
         :return: Карту с вычернкутым номером
         '''
         if current_bochonok in self.array:
-            # indexnum = Card.bochonoknum_is_in_card(card, current_bochonok)
             indexnum = self.bochonoknum_is_in_card(current_bochonok)
-            #print(indexnum)
             self.array[indexnum] = '-' + '=' + '-'
         return self.array
 
@@ -121,37 +110,92 @@ class Card():
         else:
             return False
 
-
-#ПРОЦЕДУРА ИГРЫ
 #Объявляем мешок как константу, всегда 90 шт.
 BOCHONKI = [i for i in range(1, 91)]
-#print(BOCHONKI)
 players = []
-#Вытаскиваем случаный бочонок
-current_bochonok = str(BOCHONKI.pop(random.randrange(len(BOCHONKI))))
-print('Текущий номер бочонка', current_bochonok)
-#print(BOCHONKI)
+winer_exist = False
 
-maxim_card = Card()
-#print(maxim_card)
-maxim_card.showcard()
+# count_players = int(input('Введите количество игроков: '))
+# for i in range(count_players):
+#     player_name = input('Введите имя игрока')
+#     player_type = int(input('Введите тип игрока, Человек - введите 1, компьютер - введите 0:'))
+#     player_card = Card(player_name)
+#     players.append(player_card)
 
-if maxim_card.check_win():
-    print('победитель')
-else:
-    print('еще не все зачеркнули')
+count_players = int(input('Введите количество игроков: '))
+for i in range(count_players):
+    player_name = input('Введите имя игрока')
+    player_type = int(input('Введите тип игрока, Человек - введите 1, компьютер - введите 0:'))
+    if player_type:
+        player = Player(player_name, True)
+        players.append(player)
+    else:
+        player = Player(player_name, False)
+        players.append(player)
 
-#проверяем цифру в карте
-if Card.bochonoknum_is_in_card(maxim_card, current_bochonok):
-    print('есть в карте')
+#TODO: сделать счетчик ходов
+while True:
+    #Вытаскиваем случаный бочонок
+    current_bochonok = str(BOCHONKI.pop(random.randrange(len(BOCHONKI))))
+    print('Текущий номер бочонка', current_bochonok)
+    #print(BOCHONKI)
+
+    for player in players:
+        if player.is_human:#проверяем цифру в карте человека
+            player.card.showcard()
+            print(player.is_human, player.name, 'Выбирает')
+            answ = input('Закрыть номер бочонка в карте? (Введите да или нет): ')
+            if answ == 'да':
+                if player.card.bochonoknum_is_in_card(current_bochonok):
+                    player.card.cover_bochonoknum(current_bochonok)
+                else:
+                    print('Ошибка, номера в карте нет, вы проиграли')
+                #if player.card.check_win():
+                #       print('Человек выиграл')
+                #TODO: сменить статус победителя у юзера, чтобы елси комп тоже выиграл то объявить их обоих победителями
+            else:
+                if player.card.bochonoknum_is_in_card(current_bochonok):
+                    print('Ошибка, номер есть в карте, вы проиграли')
+        else:
+            print('Проверяем номер в карточке компьютера')
+            player.card.showcard()
+            if player.card.bochonoknum_is_in_card(current_bochonok):
+                player.card.cover_bochonoknum(current_bochonok)
+                if player.card.check_win():
+                    print('Комп выиграл')
+                    #TODO: сменить статус победителя у юзера, чтобы елси комп тоже выиграл то объявить их обоих победителями
 
 
-#зачеркиваем цифру
-#cover_bochonoknum(maxim_card., current_bochonok)
-maxim_card.cover_bochonoknum(current_bochonok)
-maxim_card.showcard()
 
-#после каждого хода проверяем победителя
 
-#игра окончена, объявляем победителя
 
+#while not winer_exist:
+
+    #Вытаскиваем случаный бочонок
+#    current_bochonok = str(BOCHONKI.pop(random.randrange(len(BOCHONKI))))
+#    print('Текущий номер бочонка', current_bochonok)
+    #print(BOCHONKI)
+
+    # maxim_card = Card()
+    # #print(maxim_card)
+    # maxim_card.showcard()
+
+    # if maxim_card.check_win():
+    #     print('победитель')
+    # else:
+    #     print('еще не все зачеркнули')
+    #
+    # #проверяем цифру в карте
+    # if Card.bochonoknum_is_in_card(maxim_card, current_bochonok):
+    #     print('есть в карте')
+    #
+    #
+    # #зачеркиваем цифру
+    # #cover_bochonoknum(maxim_card., current_bochonok)
+    # maxim_card.cover_bochonoknum(current_bochonok)
+    # maxim_card.showcard()
+    #
+    # #после каждого хода проверяем победителя
+    #
+    # #игра окончена, объявляем победителя
+    #
