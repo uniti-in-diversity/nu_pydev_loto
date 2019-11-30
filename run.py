@@ -8,8 +8,8 @@ while True:
     choice = int(input('Выберите пункт меню: '))
     if choice == 1:
         count_players = int(input('Введите количество игроков: '))
-        start1 = game.Game()
-        start1.run(count_players)
+        start = game.Game()
+        start.run(count_players)
     elif choice == 0:
         break
     else:
