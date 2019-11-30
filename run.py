@@ -1,14 +1,16 @@
-from game import *
+import game
 
 while True:
-    print('Лото')
-    print('Новая игра нажмте 1')
-    print('Выход введите 0')
+    print('========== Лото ============')
+    print('Новая игра - 1')
+    print('Выход - 0')
 
     choice = int(input('Выберите пункт меню: '))
     if choice == 1:
-        game()
+        count_players = int(input('Введите количество игроков: '))
+        start = game.Game()
+        start.run(count_players)
     elif choice == 0:
-        loop = False
+        break
     else:
         print('Неверный пункт меню!')
