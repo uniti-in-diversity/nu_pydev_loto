@@ -4,19 +4,29 @@ import unittest
 
 class TestPlayer(unittest.TestCase):
 
+    def setUp(self):
+        self.player = loto.Player('Testplayer', False, False)
+        self.player2 = loto.Player('Testplayer2', False, False)
+
     def testPlayer(self):
-        self.player = loto.Player('Testplayer', True, False)
         self.assertEquals(self.player.winer, False)
-        self.assertIsInstance(self.player, loto.Player)
+        self.assertIsInstance(self.player2, loto.Player)
 
 
 class TestCard(unittest.TestCase):
 
     def setUp(self):
         self.testcard = loto.Card('card_for_test')
+        self.testcard2 = loto.Card('card2_for_test')
 
     def test_init_card(self):
         self.assertEqual(self.testcard.username, 'card_for_test')
+
+    def test_magicmetods_eq(self):
+        self.assertNotEqual(self.testcard, self.testcard2)
+
+    def test_magicmetods_str(self):
+        self.assertIsInstance(self.testcard.showcard(), str)
 
     def test_card(self):
         trigger = []
@@ -46,6 +56,7 @@ class TestCard(unittest.TestCase):
 
     def test_win(self):
         self.assertIs(self.testcard.check_win(), False)
+
 
 class TetsBochonki(unittest.TestCase):
 
@@ -84,21 +95,21 @@ class TestGame(unittest.TestCase):
 class TestGameHumans(unittest.TestCase):
 
     def setUp(self):
-        self.testgame = game.Game()
-        self.int_players = []
-        self.winers = []
-        self.player1 = loto.Player('comp1', True, False)
-        self.player2 = loto.Player('comp2', True, False)
-        self.int_players.append(self.player1)
-        self.int_players.append(self.player2)
-        self.lottobag = loto.Bag()
+
+        self.player = loto.Player('Testplayer', False, False)
+        self.player2 = loto.Player('Testplayer2', False, False)
+
+    def testGame(self):
+        players = []
+        players.append(self.player)
+        players.append(self.player2)
+        testgame = game.Game()
+        testgame.run(players)
+        self.assertIs(testgame.run(players), True)
 
     def get_input(text):
         return input(text)
 
-    def test_gamin_human(self):
-        self.testgame.run(self.int_players)
-        self.assertIs(self.testgame.usererror, True)
 
 
 

@@ -27,6 +27,15 @@ class Player:
         self.name = name
         self.card = Card(name)
 
+    def __str__(self):
+        return f'{self.name}'
+
+    def __eq__(self, other):
+        return self.name == other.name and self.is_human == other.is_human
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
 class Card():
 
     def __init__(self, username):
@@ -54,19 +63,43 @@ class Card():
         array = array[rows, cols]
         self.array = array
 
+    def __str__(self):
+        return self.showcard()
+
+    def __eq__(self, other):
+        selflist = []
+        otherlist = []
+        for line in self.array:
+            for i in line:
+                selflist.append(i)
+        for line in other.array:
+            for i in line:
+                otherlist.append(i)
+        return selflist == otherlist
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __getitem__(self, index):
+        return self.array[index]
+
     def showcard(self):
         '''
         Печатает массив в виде игровой карточки лото, нули заменяются пустыми строками (одиночными пробелами)
         :param card: массив элементов
         :return: Print в консоль
         '''
-        print('='*27)
-        print('Карта игрока:', self.username)
-        print('='*27)
+        finalline = []
+        line1 = '='*27
+        line2 = 'Карта игрока:' + self.username
+        line3 = '='*27
+        finalline.append(line1)
+        finalline.append(line2)
+        finalline.append(line3)
         for i in self.array:
             lineforprint = (' '.join(map(str, i.ravel())))
-            print(lineforprint.replace('n', '-=-'))
-        print('='*27)
+            finalline.append(lineforprint.replace('n', '-=-'))
+        return f'\n'.join(finalline)
 
     def bochonoknum_is_in_card(self, current_bochonok):
         '''
@@ -113,3 +146,21 @@ class Bag:
 
     def take_bochonok(self):
         return self.bochonok.pop(random.randrange(len(self.bochonok)))
+
+    def __str__(self):
+        return f'{self.bochonok}'
+
+    def __eq__(self, other):
+        return self.bochonok == other
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+card = Card('maxim')
+
+print(card)
+
+print(card[0,0])
+
+print(type(card.showcard()))
+

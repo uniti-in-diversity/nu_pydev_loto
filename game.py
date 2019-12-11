@@ -14,13 +14,14 @@ class Game:
         while lottobag.bochonok:
             if self.winers:
                 print('Победитель/и:', ', '.join(map(str, self.winers)))
-                break
+                return True
+                #break
             current_bochonok = str(lottobag.take_bochonok())
 
             print('Текущий номер бочонка', current_bochonok)
             for player in self.players:
                 if player.is_human:
-                    player.card.showcard()
+                    print(player.card)
                     print('Карту проверяет: ', player.name)
                     answ = input('Введите "д" если хотите закрыть номер в карте: ')
                     if answ == 'д':
@@ -43,13 +44,14 @@ class Game:
                     print('Проверяем номер в карточках роботов')
                     if player.card.bochonoknum_is_in_card(current_bochonok):
                         player.card.cover_bochonoknum(current_bochonok)
-                        player.card.showcard()
+                        print(player.card)
                     if player.card.check_win():
                         player.winer = True
                         self.winers.append(player.name)
                         continue
-                    player.card.showcard()
+                    print(player.card)
 
             if self.usererror:
                 print('Ошибка, ты проиграл: ', self.cause)
-                break
+                return False
+                #break
