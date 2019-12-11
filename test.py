@@ -9,6 +9,7 @@ class TestPlayer(unittest.TestCase):
         self.player2 = loto.Player('Testplayer2', False, False)
 
     def testPlayer(self):
+        self.player = loto.Player('Testplayer', True, False)
         self.assertEquals(self.player.winer, False)
         self.assertIsInstance(self.player2, loto.Player)
 
