@@ -34,12 +34,14 @@ class TestCard(unittest.TestCase):
         newnums = []
         for n in self.testcard.array:
             for a in n:
-                nums.append(a)
+                if a != 'n':
+                    nums.append(a)
         checkednum = nums[0]
         newcard = self.testcard.cover_bochonoknum(checkednum)
         for num in newcard:
             for i in num:
-                newnums.append(i)
+                if i != 'n':
+                    newnums.append(i)
         self.assertNotEqual(nums, newnums)
 
     def test_win(self):
