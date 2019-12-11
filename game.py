@@ -1,5 +1,6 @@
 import loto
 
+
 class Game:
     def __init__(self):
         self.players = []
@@ -7,18 +8,8 @@ class Game:
         self.usererror = False
         self.cause = ''
 
-    def run(self, count_players):
-        self.count_players = count_players
-        for i in range(self.count_players):
-            player_name = input('Введите имя игрока')
-            player_type = int(input('Введите тип игрока, Если человек - введите 1, если компьютер - введите 0:'))
-            if player_type:
-                player = loto.Player(player_name, True, False)
-                self.players.append(player)
-            else:
-                player = loto.Player(player_name, False, False)
-                self.players.append(player)
-
+    def run(self, int_players):
+        self.players = int_players
         lottobag = loto.Bag()
         while lottobag.bochonok:
             if self.winers:

@@ -14,7 +14,6 @@ def check_unic_nums(array):
     trigger = []
     for i in array:
         trigger.append(i)
-    #print(trigger)
     i = [i for i in trigger if trigger.count(i) > 1]
     if i:
         return i
