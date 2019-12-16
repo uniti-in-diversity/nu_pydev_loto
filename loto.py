@@ -155,12 +155,3 @@ class Bag:
 
     def __ne__(self, other):
         return not self.__eq__(other)
-
-card = Card('maxim')
-
-print(card)
-
-print(card[0,0])
-
-print(type(card.showcard()))
-
